@@ -7,14 +7,13 @@ public class MapWindow : EditorWindow
     float mTreeDensity = 0.0f;
     int mMapSize = 0;
     int mRiverCount = 0;
-    int[,] mTileMap;
+    int[,,] mTileMap;
 
     Stack<GameObject> mTiles = new Stack<GameObject>();
     Stack<GameObject> mTrees = new Stack<GameObject>();
-    Stack<GameObject> mRiver = new Stack<GameObject>();
     Stack<GameObject> mDecor = new Stack<GameObject>();
     Stack<GameObject> mTents = new Stack<GameObject>();
-
+    List<int> mRiver = new List<int>();
 
     [MenuItem("Window/Map Gen")]
     public static void ShowWindow()
@@ -38,85 +37,152 @@ public class MapWindow : EditorWindow
             Vector3 currentPos;
             currentPos = new Vector3(0, 0, 0);
 
-            mTileMap = new int[mMapSize * 10, mMapSize * 10];
+            mTileMap = new int[mMapSize * 10, mMapSize * 10, 2];
 
             for (int i = 0; i < mMapSize * 10; i++) //generate map
             {
                 for (int j = 0; j < mMapSize * 10; j++)
                 {
-                    mTileMap[i, j] = 0;
+                    mTileMap[i, j, 0] = 0;
                 }
             }
 
             int startPos = Random.Range(0, mMapSize*10 - 1);   
-            mTileMap[startPos, 0] = 1;
+            mTileMap[startPos, 0, 0] = 1;
+            mTileMap[startPos, 0, 1] = 1;
+
+            mTileMap[startPos, 1, 0] = 1;
+            mTileMap[startPos, 1, 1] = 1;
+
             bool endFound = false;
             Vector2 currentArrPos = new Vector2(startPos, 1);
 
+            Debug.Log("start");
+            int numberInList = 0;
             //Go to an edge
             while (!endFound)
             {
                 int choice = Random.Range(1, 4);
-                //mTileMap[(int)currentArrPos.x, (int)currentArrPos.y] = 1;
-
+                mRiver.Add(choice);
+                
                 switch (choice)
                 {
-                    case 1:
+                    case 1: // up
                         if (currentArrPos.x - 1 > 0)
                         {
-                            if (mTileMap[(int)currentArrPos.x - 1, (int)currentArrPos.y] == 0)
+                            if (mTileMap[(int)currentArrPos.x - 1, (int)currentArrPos.y, 0] == 0)
                             {
                                 currentArrPos.x--;
-                                mTileMap[(int)currentArrPos.x, (int)currentArrPos.y] = 1;
+                                
+                                if(currentArrPos.y > -1)
+                                {
+                                    mTileMap[(int)currentArrPos.x, (int)currentArrPos.y, 0] = 1;
+
+                                    numberInList++;
+                                    mTileMap[(int)currentArrPos.x, (int)currentArrPos.y, 1] = numberInList;
+                                }
+                                
                             }
                         }
                         else
                         {
+                            currentArrPos.x--;
+
+                            if(currentArrPos.x > -1)
+                            {
+                                mTileMap[(int)currentArrPos.x, (int)currentArrPos.y, 0] = 1;
+
+                                numberInList++;
+                                mTileMap[(int)currentArrPos.x, (int)currentArrPos.y, 1] = numberInList;
+                            }
+                            
                             endFound = true;
                         }
  
                         break;
 
-                    case 2:
+                    case 2: //forward
                         if (currentArrPos.y + 1 < mMapSize * 10)
                         {
-                            if (mTileMap[(int)currentArrPos.x, (int)currentArrPos.y + 1] == 0)
+                            if (mTileMap[(int)currentArrPos.x, (int)currentArrPos.y + 1, 0] == 0)
                             {
                                 currentArrPos.y++;
-                                mTileMap[(int)currentArrPos.x, (int)currentArrPos.y] = 2;
+
+                                if (currentArrPos.y < mMapSize * 10)
+                                {
+                                    mTileMap[(int)currentArrPos.x, (int)currentArrPos.y, 0] = 2;
+
+                                    numberInList++;
+                                    mTileMap[(int)currentArrPos.x, (int)currentArrPos.y, 1] = numberInList;
+                                }
+                                    
+
                             }
                         }
                         else
                         {
+                            currentArrPos.y++;
+
+                            if (currentArrPos.y < mMapSize * 10)
+                            {
+                                mTileMap[(int)currentArrPos.x, (int)currentArrPos.y, 0] = 2;
+
+                                numberInList++;
+                                mTileMap[(int)currentArrPos.x, (int)currentArrPos.y, 1] = numberInList;
+                            }
+
                             endFound = true;
                         }
                             
                         break;
 
-                    case 3:
+                    case 3: //down
                         if (currentArrPos.x + 1 < mMapSize * 10)
                         {
-                            if (mTileMap[(int)currentArrPos.x + 1, (int)currentArrPos.y] == 0)
+                            if (mTileMap[(int)currentArrPos.x + 1, (int)currentArrPos.y, 0] == 0)
                             {
                                 currentArrPos.x++;
-                                mTileMap[(int)currentArrPos.x, (int)currentArrPos.y] = 3;
+
+                                if (currentArrPos.x < mMapSize * 10)
+                                {
+                                    mTileMap[(int)currentArrPos.x, (int)currentArrPos.y, 0] = 3;
+
+                                    numberInList++;
+                                    mTileMap[(int)currentArrPos.x, (int)currentArrPos.y, 1] = numberInList;
+                                }
+                                    
                             }
                         }
                         else
                         {
-                            endFound = true;
-                        }
-                            
+                            currentArrPos.x++;
 
+                            if(currentArrPos.x < mMapSize * 10)
+                            {
+                                mTileMap[(int)currentArrPos.x, (int)currentArrPos.y, 0] = 3;
+
+                                numberInList++;
+                                mTileMap[(int)currentArrPos.x, (int)currentArrPos.y, 1] = numberInList;
+                            }
+                                
+
+                            endFound = true;
+                        }   
                         break;
+
+                    default:
+                        break;                   
                 }
 
-                Debug.Log(choice);
-
-               
+              
+                Debug.Log(choice); 
             }
+            Debug.Log("end");
 
 
+
+            GameObject newTile;
+            mRiverCount = 1;
 
             //For the base tiles and river // the map starts at 0, 0, 0 and goes out (not centered)
             for (int i = 0; i < mMapSize * 10; i++)
@@ -125,73 +191,135 @@ public class MapWindow : EditorWindow
 
                 for(int j = 0; j < mMapSize * 10; j++)
                 {
-                    if(mTileMap[i, j] == 0)
+                    currentPos.z = j * 3;
+
+                    if (mTileMap[i, j, 0] == 0)
                     {
-                        currentPos.z = j * 3;
-                        GameObject newTile = Instantiate(Resources.Load("Prefabs/BasePlate", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                        newTile = Instantiate(Resources.Load("Prefabs/BasePlate", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
                         mTiles.Push(newTile);
                     }
                     else
                     {
-                        currentPos.z = j * 3;
-                        GameObject newTile;
-                        switch (mTileMap[i, j])
+                        //newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                        //mTiles.Push(newTile);
+                        int inFront;
+                        int behind;
+
+                        if (mTileMap[i, j, 1] == 1 || mTileMap[i, j, 1] == 0) //only one check (in front)
                         {
-                            case 1:
-                                newTile = Instantiate(Resources.Load("Prefabs/OneRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
-                                mTiles.Push(newTile);
-                                break;
+                            switch (mRiver.IndexOf(mTileMap[i, j, 1] + 1))
+                            {
+                                case 1:
+                                    newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                                    mTiles.Push(newTile);
+                                    break;
 
-                            case 2:
-                                newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
-                                mTiles.Push(newTile);
-                                break;
+                                case 2:
+                                    newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                                    mTiles.Push(newTile);
+                                    break;
 
-                            case 3:
-                                newTile = Instantiate(Resources.Load("Prefabs/ThreeRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
-                                mTiles.Push(newTile);
-                                break;
-                             
+                                case 3:
+                                    newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                                    mTiles.Push(newTile);
+                                    break;
+                            }
+
                         }
-                       
-                        
+                        else // two check (front and back)
+                        {
+                            inFront = mRiver.IndexOf(mTileMap[i, j, 1] + 1);
+                            behind = mRiver.IndexOf(mTileMap[i, j, 1] - 1);
+
+                            switch (inFront)
+                            {
+                                case 1:
+                                    switch (mRiver.IndexOf(mTileMap[i, j, 1]))
+                                    {
+                                        case 1:
+                                            newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                                            mTiles.Push(newTile);
+                                            break;
+
+                                        case 2:
+                                            newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                                            mTiles.Push(newTile);
+                                            break;
+
+                                        case 3:
+                                            newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                                            mTiles.Push(newTile);
+                                            break;
+                                    }
+                                    break;
+
+                                case 2:
+                                    switch (mRiver.IndexOf(mTileMap[i, j, 1]))
+                                    {
+                                        case 1:
+                                            newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                                            mTiles.Push(newTile);
+                                            break;
+
+                                        case 2:
+                                            newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                                            mTiles.Push(newTile);
+                                            break;
+
+                                        case 3:
+                                            newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                                            mTiles.Push(newTile);
+                                            break;
+                                    }
+                                    break;
+
+                                case 3:
+                                    switch (mRiver.IndexOf(mTileMap[i, j, 1]))
+                                    {
+                                        case 1:
+                                            newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                                            mTiles.Push(newTile);
+                                            break;
+
+                                        case 2:
+                                            newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                                            mTiles.Push(newTile);
+                                            break;
+
+                                        case 3:
+                                            newTile = Instantiate(Resources.Load("Prefabs/BaseRiver", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
+                                            mTiles.Push(newTile);
+                                            break;
+                                    }
+                                    break;
+                            }
+
+                        }
+
+
+                        mRiverCount++;
                     }
                     
                 }
             }
 
-            
-            //For The trees
-            for (int k = 0; k < mMapSize * mTreeDensity * 10; k++)
-            {
-                currentPos.x = Random.Range(0, mMapSize * 30 - 3);
-                currentPos.z = Random.Range(0, mMapSize * 30 - 3); 
+           
 
-                foreach (GameObject obj in mTrees)
+            
+            //For The trees /// now in tile form
+            for (int k = 0; k < mTreeDensity; k++)
+            {
+                currentPos.x = Random.Range(0, mMapSize * 10); // in tile map
+                currentPos.z = Random.Range(0, mMapSize * 10); 
+
+                while (mTileMap[(int)currentPos.x, (int)currentPos.y, 0] != 0)  
                 {
-                    if (Mathf.Abs(obj.transform.position.x - currentPos.x) < 3)
-                    {
-                        if (Mathf.Abs(obj.transform.position.y - currentPos.y) < 3)
-                        {
-                            currentPos.x = Random.Range(0, mMapSize * 30 - 3);
-                            currentPos.z = Random.Range(0, mMapSize * 30 - 3);
-                        }
-                    }
+                    currentPos.x = Random.Range(0, mMapSize * 10);
+                    currentPos.z = Random.Range(0, mMapSize * 10);
                 }
 
-                Vector3 scaledPos;
-                scaledPos.x = (currentPos.x + 3) / 3;
-                scaledPos.y = (currentPos.y + 3) / 3;
+                currentPos *= 3;
 
-                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y] != 0)  
-                {
-                    currentPos.x = Random.Range(0, mMapSize * 30 - 3);
-                    currentPos.z = Random.Range(0, mMapSize * 30 - 3);
-
-                    scaledPos.x = (currentPos.x + 3) / 30;
-                    scaledPos.y = (currentPos.y + 3) / 30;
-                } 
-                
                 GameObject newTree = Instantiate(Resources.Load("Prefabs/BaseTree", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
                 mTrees.Push(newTree);
             }
@@ -209,7 +337,7 @@ public class MapWindow : EditorWindow
                 scaledPos.x = (currentPos.x + 3) / 3;
                 scaledPos.y = (currentPos.y + 3) / 3;
 
-                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y] != 0)
+                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y, 0] != 0)
                 {
                     currentPos.x = Random.Range(0, mMapSize * 30 - 3);
                     currentPos.z = Random.Range(0, mMapSize * 30 - 3);
@@ -233,7 +361,7 @@ public class MapWindow : EditorWindow
                 scaledPos.x = (currentPos.x + 3) / 3;
                 scaledPos.y = (currentPos.y + 3) / 3;
 
-                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y] != 0)
+                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y, 0] != 0)
                 {
                     currentPos.x = Random.Range(0, mMapSize * 30 - 3);
                     currentPos.z = Random.Range(0, mMapSize * 30 - 3);
@@ -261,7 +389,7 @@ public class MapWindow : EditorWindow
                 scaledPos.x = (currentPos.x + 3) / 3;
                 scaledPos.y = (currentPos.y + 3) / 3;
 
-                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y] != 0)
+                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y, 0] != 0)
                 {
                     currentPos.x = Random.Range(0, mMapSize * 30 - 3);
                     currentPos.z = Random.Range(0, mMapSize * 30 - 3);
@@ -288,7 +416,7 @@ public class MapWindow : EditorWindow
                 scaledPos.x = (currentPos.x + 3) / 3;
                 scaledPos.y = (currentPos.y + 3) / 3;
 
-                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y] != 0)
+                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y, 0] != 0)
                 {
                     currentPos.x = Random.Range(0, mMapSize * 30 - 3);
                     currentPos.z = Random.Range(0, mMapSize * 30 - 3);
@@ -315,7 +443,7 @@ public class MapWindow : EditorWindow
                 scaledPos.x = (currentPos.x + 3) / 3;
                 scaledPos.y = (currentPos.y + 3) / 3;
 
-                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y] != 0)
+                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y, 0] != 0)
                 {
                     currentPos.x = Random.Range(0, mMapSize * 30 - 3);
                     currentPos.z = Random.Range(0, mMapSize * 30 - 3);
