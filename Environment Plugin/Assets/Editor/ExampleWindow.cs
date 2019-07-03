@@ -318,57 +318,51 @@ public class MapWindow : EditorWindow
                     currentPos.z = Random.Range(0, mMapSize * 10);
                 }
 
+                mTileMap[(int)currentPos.x, (int)currentPos.z, 0] = 1;
+
                 currentPos *= 3;
 
                 GameObject newTree = Instantiate(Resources.Load("Prefabs/BaseTree", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
                 mTrees.Push(newTree);
             }
 
-            //For The river
-
-
-            //CampFires 1 per 10 x 10 section
+            //CampFires 1 per 10 x 10 section ///tiled
             for(int i = 0; i < mMapSize * mMapSize; i++)
             {
-                currentPos.x = Random.Range(0, mMapSize * 30 - 3);
-                currentPos.z = Random.Range(0, mMapSize * 30 - 3);
+                currentPos.x = Random.Range(0, mMapSize * 10);
+                currentPos.z = Random.Range(0, mMapSize * 10);
                 currentPos.y = 0.3f;
-                Vector3 scaledPos;
-                scaledPos.x = (currentPos.x + 3) / 3;
-                scaledPos.y = (currentPos.y + 3) / 3;
 
-                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y, 0] != 0)
+                while (mTileMap[(int)currentPos.x, (int)currentPos.z, 0] != 0)
                 {
-                    currentPos.x = Random.Range(0, mMapSize * 30 - 3);
-                    currentPos.z = Random.Range(0, mMapSize * 30 - 3);
-                    scaledPos.x = (currentPos.x + 3) / 3;
-                    scaledPos.y = (currentPos.y + 3) / 3;
+                    currentPos.x = Random.Range(0, mMapSize * 10);
+                    currentPos.z = Random.Range(0, mMapSize * 10);
                 }
 
+                mTileMap[(int)currentPos.x, (int)currentPos.z, 0] = 1;
+                currentPos *= 3;
+                currentPos.y /= 3;
                 GameObject newFire = Instantiate(Resources.Load("Prefabs/CampFire", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
                 mDecor.Push(newFire);
             }
 
-            //Tents
+            //Tents ///tiled
             for (int i = 0; i < mMapSize * mMapSize * 2; i++)
             {
-                currentPos.x = Random.Range(0, mMapSize * 30 - 3);
-                currentPos.z = Random.Range(0, mMapSize * 30 - 3);
+                currentPos.x = Random.Range(0, mMapSize * 10);
+                currentPos.z = Random.Range(0, mMapSize * 10);
 
                 int yRot = Random.Range(1, 360);
 
-                Vector3 scaledPos;
-                scaledPos.x = (currentPos.x + 3) / 3;
-                scaledPos.y = (currentPos.y + 3) / 3;
-
-                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y, 0] != 0)
+                while (mTileMap[(int)currentPos.x, (int)currentPos.z, 0] != 0)
                 {
-                    currentPos.x = Random.Range(0, mMapSize * 30 - 3);
-                    currentPos.z = Random.Range(0, mMapSize * 30 - 3);
-                    scaledPos.x = (currentPos.x + 3) / 3;
-                    scaledPos.y = (currentPos.y + 3) / 3;
+                    currentPos.x = Random.Range(0, mMapSize * 10);
+                    currentPos.z = Random.Range(0, mMapSize * 10);
                 }
 
+                mTileMap[(int)currentPos.x, (int)currentPos.z, 0] = 1;
+                currentPos *= 3;
+                currentPos.y /= 3;
 
                 GameObject newTent = Instantiate(Resources.Load("Prefabs/Tent", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
                 newTent.transform.Rotate(new Vector3(0, yRot, 0));
@@ -376,26 +370,23 @@ public class MapWindow : EditorWindow
                 mDecor.Push(newTent);
             }
 
-            //Rocks
+            //Rocks ///tiled
             for (int i = 0; i < mMapSize * mMapSize; i++)
             {
-                currentPos.x = Random.Range(0, mMapSize * 30 - 3);
-                currentPos.z = Random.Range(0, mMapSize * 30 - 3);
+                currentPos.x = Random.Range(0, mMapSize * 10);
+                currentPos.z = Random.Range(0, mMapSize * 10);
 
                 int yRot = Random.Range(1, 360);
 
-
-                Vector3 scaledPos;
-                scaledPos.x = (currentPos.x + 3) / 3;
-                scaledPos.y = (currentPos.y + 3) / 3;
-
-                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y, 0] != 0)
+                while (mTileMap[(int)currentPos.x, (int)currentPos.z, 0] != 0)
                 {
-                    currentPos.x = Random.Range(0, mMapSize * 30 - 3);
-                    currentPos.z = Random.Range(0, mMapSize * 30 - 3);
-                    scaledPos.x = (currentPos.x + 3) / 3;
-                    scaledPos.y = (currentPos.y + 3) / 3;
+                    currentPos.x = Random.Range(0, mMapSize * 10);
+                    currentPos.z = Random.Range(0, mMapSize * 10);
                 }
+
+                mTileMap[(int)currentPos.x, (int)currentPos.z, 0] = 1;
+                currentPos *= 3;
+                currentPos.y /= 3;
 
                 GameObject newRock = Instantiate(Resources.Load("Prefabs/BaseRock", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
                 newRock.transform.Rotate(new Vector3(0, yRot, 0));
@@ -403,26 +394,23 @@ public class MapWindow : EditorWindow
                 mDecor.Push(newRock);
             }
 
-            //Grass
+            //Grass //tiled
             for (int i = 0; i < mMapSize * mMapSize * 25; i++)
             {
-                currentPos.x = Random.Range(0, mMapSize * 30 - 3);
-                currentPos.z = Random.Range(0, mMapSize * 30 - 3);
+                currentPos.x = Random.Range(0, mMapSize * 10);
+                currentPos.z = Random.Range(0, mMapSize * 10);
 
                 int yRot = Random.Range(1, 360);
 
-
-                Vector3 scaledPos;
-                scaledPos.x = (currentPos.x + 3) / 3;
-                scaledPos.y = (currentPos.y + 3) / 3;
-
-                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y, 0] != 0)
+                while (mTileMap[(int)currentPos.x, (int)currentPos.z, 0] != 0)
                 {
-                    currentPos.x = Random.Range(0, mMapSize * 30 - 3);
-                    currentPos.z = Random.Range(0, mMapSize * 30 - 3);
-                    scaledPos.x = (currentPos.x + 3) / 3;
-                    scaledPos.y = (currentPos.y + 3) / 3;
+                    currentPos.x = Random.Range(0, mMapSize * 10);
+                    currentPos.z = Random.Range(0, mMapSize * 10); 
                 }
+
+                mTileMap[(int)currentPos.x, (int)currentPos.z, 0] = 1;
+                currentPos *= 3;
+                currentPos.y /= 3;
 
                 GameObject newGrass = Instantiate(Resources.Load("Prefabs/BaseGrass", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
                 newGrass.transform.Rotate(new Vector3(0, yRot, 0));
@@ -430,7 +418,7 @@ public class MapWindow : EditorWindow
                 mDecor.Push(newGrass);
             }
 
-            //Flowers
+            //Flowers ///tiled
             for (int i = 0; i < mMapSize * mMapSize * 6; i++)
             {
                 currentPos.x = Random.Range(0, mMapSize * 30 - 3);
@@ -438,18 +426,15 @@ public class MapWindow : EditorWindow
 
                 int yRot = Random.Range(1, 360);
 
-
-                Vector3 scaledPos;
-                scaledPos.x = (currentPos.x + 3) / 3;
-                scaledPos.y = (currentPos.y + 3) / 3;
-
-                while (mTileMap[(int)scaledPos.x, (int)scaledPos.y, 0] != 0)
+                while (mTileMap[(int)currentPos.x, (int)currentPos.z, 0] != 0)
                 {
-                    currentPos.x = Random.Range(0, mMapSize * 30 - 3);
-                    currentPos.z = Random.Range(0, mMapSize * 30 - 3);
-                    scaledPos.x = (currentPos.x + 3) / 3;
-                    scaledPos.y = (currentPos.y + 3) / 3;
+                    currentPos.x = Random.Range(0, mMapSize * 10);
+                    currentPos.z = Random.Range(0, mMapSize * 10);
                 }
+
+                mTileMap[(int)currentPos.x, (int)currentPos.z, 0] = 1;
+                currentPos *= 3;
+                currentPos.y /= 3;
 
                 GameObject newFlower = Instantiate(Resources.Load("Prefabs/BaseFlower", typeof(GameObject)) as GameObject, currentPos, Quaternion.identity);
                 newFlower.transform.Rotate(new Vector3(0, yRot, 0));
